@@ -1,0 +1,40 @@
+local spiralcodestudio_patreon_email = 'YOUR_EMAIL'
+local spiralcodestudio_key = 'YOUR_ACCESS_KEY'
+
+local function spiralcodestudio_plugin(name)
+	local plugin = {publisherId = 'com.spiralcodestudio', supportedPlatforms = {}}
+	local platforms = {'android', 'appletvos', 'appletvsimulator', 'iphone', 'iphone-sim', 'macos', 'win32'}
+	for i = 1, #platforms do
+		local platform = platforms[i]
+		plugin.supportedPlatforms[platform] = {url = 'https://build.spiralcodestudio.com/' .. spiralcodestudio_patreon_email .. '/' .. spiralcodestudio_key .. '/solar2d/' .. name .. '_' .. platform .. '.tgz'}
+	end
+	return plugin
+end
+
+settings = {
+	orientation = {
+		default = 'portrait',
+		supported = {'portrait', 'portraitUpsideDown'}
+	},
+	android = {
+		applicationChildElements = {
+			'<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713"/>' -- Replace with your Android AdMob App Id.
+		}
+	},
+	iphone = {
+		xcassets = 'Images.xcassets',
+		plist = {
+			UILaunchStoryboardName = 'LaunchScreen',
+			GADApplicationIdentifier = 'ca-app-pub-3940256099942544~1458002511', -- Replace with your iOS AdMob App Id.
+		},
+	},
+	plugins = {
+		['plugin.admob'] = spiralcodestudio_plugin('admob'),
+		['plugin.admob_iphone_dep'] = {
+			publisherId = 'com.spiralcodestudio',
+			supportedPlatforms = {
+				iphone = {url = 'https://spiralcodestudio-public.s3.us-east-2.amazonaws.com/solar2d/admob_iphone_dep.tgz'}
+			}
+		}
+	}
+}
